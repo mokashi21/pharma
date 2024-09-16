@@ -272,7 +272,7 @@ app.get("/admin/medical-reps", verifyToken, async (req, res) => {
 
 // Endpoint to add a doctor
 app.post("/admin-dashboard-add-doctors", verifyToken, async (req, res) => {
-  const { doctorName, gender, address, mobileNumber, email, speciality, empId } = req.body;
+  const { prefix, doctorName, gender, address, mobileNumber, email, speciality, visitType, empId } = req.body;
 
   if (!doctorName || !gender || !address || !mobileNumber || !email || !speciality || !empId) {
     return res.status(400).json({ message: 'All fields are required' });
@@ -280,13 +280,15 @@ app.post("/admin-dashboard-add-doctors", verifyToken, async (req, res) => {
 
   try {
     const newDoctor = new Doctor({
+      prefix,
       doctorName,
       gender,
       address,
       mobileNumber,
       email,
       speciality,
-      empId
+      visitType,
+      empId,
     });
 
     await newDoctor.save();
@@ -296,6 +298,19 @@ app.post("/admin-dashboard-add-doctors", verifyToken, async (req, res) => {
     res.status(500).json({ message: 'Failed to add doctor' });
   }
 });
+
+// list doctors;
+
+app.get("/all-doctors", verifyToken, async (req, res) => {
+  try {
+    const doctors = await Doctor.find();
+    res.json(doctors);
+  } catch (error) {
+    console.error('Error fetching doctors:', error);
+    res.status(500).json({ message: 'Failed to fetch doctors' });
+  }
+} )
+
 // Logout Route
 app.delete("/logout", verifyToken, (req, res) => {
   try {

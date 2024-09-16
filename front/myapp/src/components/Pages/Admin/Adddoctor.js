@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
+import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHome, faList } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
 
 const AddDoctorForm = () => {
   const [formData, setFormData] = useState({
-    doctorName: '',
-    gender: '',
-    address: '',
-    mobileNumber: '',
-    email: '',
-    speciality: ''
+    doctorName: "",
+    gender: "",
+    address: "",
+    mobileNumber: "",
+    email: "",
+    speciality: "",
+    visitType: "", // New field
   });
 
   const handleChange = (e) => {
@@ -25,9 +29,10 @@ const AddDoctorForm = () => {
       !formData.address ||
       !formData.mobileNumber ||
       !formData.email ||
-      !formData.speciality
+      !formData.speciality ||
+      !formData.visitType // Check new field
     ) {
-      alert('Please fill out all fields');
+      alert("Please fill out all fields");
       return;
     }
 
@@ -36,41 +41,78 @@ const AddDoctorForm = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:3002/admin-dashboard-add-doctors',
+        "http://localhost:3002/admin-dashboard-add-doctors",
         { ...formData, empId },
         {
           headers: {
-            'auth-token': token,
-            'Content-Type': 'application/json',
+            "auth-token": token,
+            "Content-Type": "application/json",
           },
         }
       );
+      console.log(response);
 
-      console.log(response)
       // Clear form
       setFormData({
-        doctorName: '',
-        gender: '',
-        address: '',
-        mobileNumber: '',
-        email: '',
-        speciality: '',
+        doctorName: "",
+        gender: "",
+        address: "",
+        mobileNumber: "",
+        email: "",
+        speciality: "",
+        visitType: "", // Clear new field
       });
 
-      alert('Doctor added successfully!');
+      alert("Doctor added successfully!");
     } catch (error) {
-      console.error('Error adding doctor:', error);
-      alert('Failed to add doctor');
+      console.error("Error adding doctor:", error);
+      alert("Failed to add doctor");
     }
   };
 
   return (
     <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-6">Add Doctor</h2>
+      <div className="flex justify-between items-center mb-6">
+        <Link to="/dashboard">
+          <FontAwesomeIcon
+            icon={faHome}
+            className="text-2xl text-blue-600 hover:text-blue-800"
+          />
+        </Link>
+        <Link to="/admin-dashboard-all-doctors">
+          <FontAwesomeIcon
+            icon={faList}
+            className="text-2xl text-blue-600 hover:text-blue-800"
+          />
+        </Link>
+        <h2 className="text-2xl font-semibold text-gray-800">Add Doctor</h2>
+      </div>
       <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Prefix */}
+        <div className="col-span-1">
+          <label
+            htmlFor="prefix"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Prefix
+          </label>
+          <select
+            id="prefix"
+            value={formData.prefix}
+            onChange={handleChange}
+            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2"
+          >
+            <option value="">Select prefix</option>
+            <option value="Dr.">Dr.</option>
+          </select>
+        </div>
+
         {/* Doctor Name */}
         <div className="col-span-1">
-          <label htmlFor="doctorName" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="doctorName"
+            className="block text-sm font-medium text-gray-700"
+          >
             Doctor Name
           </label>
           <input
@@ -85,7 +127,10 @@ const AddDoctorForm = () => {
 
         {/* Gender */}
         <div className="col-span-1">
-          <label htmlFor="gender" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="gender"
+            className="block text-sm font-medium text-gray-700"
+          >
             Gender
           </label>
           <select
@@ -103,7 +148,10 @@ const AddDoctorForm = () => {
 
         {/* Address */}
         <div className="col-span-2">
-          <label htmlFor="address" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="address"
+            className="block text-sm font-medium text-gray-700"
+          >
             Address
           </label>
           <input
@@ -118,7 +166,10 @@ const AddDoctorForm = () => {
 
         {/* Mobile Number */}
         <div className="col-span-1">
-          <label htmlFor="mobileNumber" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="mobileNumber"
+            className="block text-sm font-medium text-gray-700"
+          >
             Mobile Number
           </label>
           <input
@@ -133,7 +184,10 @@ const AddDoctorForm = () => {
 
         {/* Email */}
         <div className="col-span-1">
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-gray-700"
+          >
             Email
           </label>
           <input
@@ -148,7 +202,10 @@ const AddDoctorForm = () => {
 
         {/* Speciality */}
         <div className="col-span-2">
-          <label htmlFor="speciality" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="speciality"
+            className="block text-sm font-medium text-gray-700"
+          >
             Speciality
           </label>
           <select
@@ -163,6 +220,26 @@ const AddDoctorForm = () => {
             <option value="neurologist">Neurologist</option>
             <option value="pediatrician">Pediatrician</option>
             <option value="surgeon">Surgeon</option>
+          </select>
+        </div>
+
+        {/* Visit Type */}
+        <div className="col-span-2">
+          <label
+            htmlFor="visitType"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Visit Type
+          </label>
+          <select
+            id="visitType"
+            value={formData.visitType}
+            onChange={handleChange}
+            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2"
+          >
+            <option value="">Select Visit Type</option>
+            <option value="single">Single</option>
+            <option value="double">Double</option>
           </select>
         </div>
 

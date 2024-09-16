@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 const Dashboard = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [checkInTime, setCheckInTime] = useState(null);
+  const [doctors, setDoctors] = useState([]);
   const [isCheckedIn, setIsCheckedIn] = useState(false);
   const [locationError, setLocationError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -33,14 +34,34 @@ const Dashboard = () => {
     fetchCheckInStatus();
   }, []);
 
+  // lists
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      const token = localStorage.getItem("data");
+      try {
+        const response = await axios.get('http://localhost:3002/all-doctors', {
+          headers: {
+            'auth-token': token,
+          }
+        });
+        setDoctors(response.data);
+        console.log("response", response)
+      } catch (error) {
+        console.error('Error fetching doctors:', error);
+      }
+    };
 
-  const doctors = [
-    {
-      name: "Dr. Sarah Williams",
-      speciality: "Cardiology",
-      avatar: "https://via.placeholder.com/40",
-    },
-  ];
+    fetchDoctors();
+  }, []);
+
+
+  // const doctors = [
+  //   {
+  //     name: "Dr. Sarah Williams",
+  //     speciality: "Cardiology",
+  //     avatar: "https://via.placeholder.com/40",
+  //   },
+  // ];
 
   const today = new Date();
   const todayDayIndex = today.getDay();
@@ -161,11 +182,13 @@ const Dashboard = () => {
                   className="w-12 h-12 rounded-full"
                 />
                 <div>
-                  <p className="text-blue-900 font-semibold">{doctor.name}</p>
+                  <p className="text-blue-900 font-semibold">{doctor.doctorName}</p>
                   <p className="text-blue-600">{doctor.speciality}</p>
+                  <p className="text-amber-600 font-light ">{doctor.visitType}</p>
                 </div>
               </li>
             ))}
+          
           </ul>
         </div>
       </aside>
@@ -223,7 +246,7 @@ const Dashboard = () => {
               E-Detailing
             </Link>
             <Link
-              to="/admin-dashboard-add-doctors"
+              to="/doctor"
               className="text-blue-800 hover:text-blue-600 transition duration-300 pt-1 hover:underline"
             >
               Doctor

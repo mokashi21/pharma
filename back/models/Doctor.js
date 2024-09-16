@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const doctorSchema = new mongoose.Schema({
+  prefix: {
+    type: String,
+    enum: ['Dr.'], // If you only allow 'Dr.'
+    default: 'Dr.',
+  },
   doctorName: {
     type: String,
     required: true
@@ -25,6 +30,11 @@ const doctorSchema = new mongoose.Schema({
   speciality: {
     type: String,
     required: true
+  },
+  visitType: {
+    type: String,
+    enum: ['single', 'double'],
+    required: true,
   },
   empId: {
     type: String,
