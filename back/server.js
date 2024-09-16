@@ -8,6 +8,7 @@ const dotenv = require("dotenv");
 const User = require("./models/User");
 const cookieParser = require("cookie-parser");
 const CheckIn = require("./models/CheckIn");
+const Doctor = require("./models/Doctor")
 const app = express();
 
 // Load environment variables
@@ -134,6 +135,8 @@ app.get("/check-in-status", verifyToken, async (req, res) => {
     res.status(500).json({ message: "Error fetching check-in status" });
   }
 });
+
+// 
 
 
 // Register Route
@@ -266,6 +269,33 @@ app.get("/admin/medical-reps", verifyToken, async (req, res) => {
   }
 });
 
+
+// Endpoint to add a doctor
+app.post("/admin-dashboard-add-doctors", verifyToken, async (req, res) => {
+  const { doctorName, gender, address, mobileNumber, email, speciality, empId } = req.body;
+
+  if (!doctorName || !gender || !address || !mobileNumber || !email || !speciality || !empId) {
+    return res.status(400).json({ message: 'All fields are required' });
+  }
+
+  try {
+    const newDoctor = new Doctor({
+      doctorName,
+      gender,
+      address,
+      mobileNumber,
+      email,
+      speciality,
+      empId
+    });
+
+    await newDoctor.save();
+    res.status(201).json({ message: 'Doctor added successfully', doctor: newDoctor });
+  } catch (error) {
+    console.error('Error adding doctor:', error);
+    res.status(500).json({ message: 'Failed to add doctor' });
+  }
+});
 // Logout Route
 app.delete("/logout", verifyToken, (req, res) => {
   try {

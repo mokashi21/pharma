@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const AddDoctorForm = () => {
   const [formData, setFormData] = useState({
@@ -17,8 +18,7 @@ const AddDoctorForm = () => {
     });
   };
 
-  const handleClick = () => {
-    // Basic validation
+  const handleClick = async () => {
     if (
       !formData.doctorName ||
       !formData.gender ||
@@ -31,21 +31,37 @@ const AddDoctorForm = () => {
       return;
     }
 
-    // Save to localStorage
-    const existingDoctors = JSON.parse(localStorage.getItem('doctors')) || [];
-    localStorage.setItem('doctors', JSON.stringify([...existingDoctors, formData]));
+    const token = localStorage.getItem("data");
+    const empId = localStorage.getItem("empId");
 
-    // Clear form
-    setFormData({
-      doctorName: '',
-      gender: '',
-      address: '',
-      mobileNumber: '',
-      email: '',
-      speciality: '',
-    });
+    try {
+      const response = await axios.post(
+        'http://localhost:3002/admin-dashboard-add-doctors',
+        { ...formData, empId },
+        {
+          headers: {
+            'auth-token': token,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
 
-    alert('Doctor added successfully!');
+      console.log(response)
+      // Clear form
+      setFormData({
+        doctorName: '',
+        gender: '',
+        address: '',
+        mobileNumber: '',
+        email: '',
+        speciality: '',
+      });
+
+      alert('Doctor added successfully!');
+    } catch (error) {
+      console.error('Error adding doctor:', error);
+      alert('Failed to add doctor');
+    }
   };
 
   return (

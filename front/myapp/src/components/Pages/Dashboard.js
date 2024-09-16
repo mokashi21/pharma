@@ -40,7 +40,6 @@ const Dashboard = () => {
       speciality: "Cardiology",
       avatar: "https://via.placeholder.com/40",
     },
-    // Add more doctors as needed...
   ];
 
   const today = new Date();
@@ -59,6 +58,7 @@ const Dashboard = () => {
       .then((response) => {
         console.log(response.data.message);
         localStorage.removeItem("data");
+        localStorage.removeItem("empId");
         navigate("/");
       })
       .catch((error) => {
@@ -221,6 +221,12 @@ const Dashboard = () => {
               className="text-blue-800 hover:text-blue-600 transition duration-300 pt-1 hover:underline"
             >
               E-Detailing
+            </Link>
+            <Link
+              to="/admin-dashboard-add-doctors"
+              className="text-blue-800 hover:text-blue-600 transition duration-300 pt-1 hover:underline"
+            >
+              Doctor
             </Link>
           </nav>
 
