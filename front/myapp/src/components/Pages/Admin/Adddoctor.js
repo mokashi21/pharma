@@ -1,0 +1,168 @@
+import React, { useState } from 'react';
+
+const AddDoctorForm = () => {
+  const [formData, setFormData] = useState({
+    doctorName: '',
+    gender: '',
+    address: '',
+    mobileNumber: '',
+    email: '',
+    speciality: ''
+  });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value,
+    });
+  };
+
+  const handleClick = () => {
+    // Basic validation
+    if (
+      !formData.doctorName ||
+      !formData.gender ||
+      !formData.address ||
+      !formData.mobileNumber ||
+      !formData.email ||
+      !formData.speciality
+    ) {
+      alert('Please fill out all fields');
+      return;
+    }
+
+    // Save to localStorage
+    const existingDoctors = JSON.parse(localStorage.getItem('doctors')) || [];
+    localStorage.setItem('doctors', JSON.stringify([...existingDoctors, formData]));
+
+    // Clear form
+    setFormData({
+      doctorName: '',
+      gender: '',
+      address: '',
+      mobileNumber: '',
+      email: '',
+      speciality: '',
+    });
+
+    alert('Doctor added successfully!');
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg">
+      <h2 className="text-2xl font-semibold text-gray-800 mb-6">Add Doctor</h2>
+      <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Doctor Name */}
+        <div className="col-span-1">
+          <label htmlFor="doctorName" className="block text-sm font-medium text-gray-700">
+            Doctor Name
+          </label>
+          <input
+            type="text"
+            id="doctorName"
+            value={formData.doctorName}
+            onChange={handleChange}
+            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2"
+            placeholder="Enter doctor name"
+          />
+        </div>
+
+        {/* Gender */}
+        <div className="col-span-1">
+          <label htmlFor="gender" className="block text-sm font-medium text-gray-700">
+            Gender
+          </label>
+          <select
+            id="gender"
+            value={formData.gender}
+            onChange={handleChange}
+            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2"
+          >
+            <option value="">Select gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        {/* Address */}
+        <div className="col-span-2">
+          <label htmlFor="address" className="block text-sm font-medium text-gray-700">
+            Address
+          </label>
+          <input
+            type="text"
+            id="address"
+            value={formData.address}
+            onChange={handleChange}
+            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2"
+            placeholder="Enter address"
+          />
+        </div>
+
+        {/* Mobile Number */}
+        <div className="col-span-1">
+          <label htmlFor="mobileNumber" className="block text-sm font-medium text-gray-700">
+            Mobile Number
+          </label>
+          <input
+            type="tel"
+            id="mobileNumber"
+            value={formData.mobileNumber}
+            onChange={handleChange}
+            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2"
+            placeholder="Enter mobile number"
+          />
+        </div>
+
+        {/* Email */}
+        <div className="col-span-1">
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            Email
+          </label>
+          <input
+            type="email"
+            id="email"
+            value={formData.email}
+            onChange={handleChange}
+            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2"
+            placeholder="Enter email"
+          />
+        </div>
+
+        {/* Speciality */}
+        <div className="col-span-2">
+          <label htmlFor="speciality" className="block text-sm font-medium text-gray-700">
+            Speciality
+          </label>
+          <select
+            id="speciality"
+            value={formData.speciality}
+            onChange={handleChange}
+            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2"
+          >
+            <option value="">Select Speciality</option>
+            <option value="cardiologist">Cardiologist</option>
+            <option value="dermatologist">Dermatologist</option>
+            <option value="neurologist">Neurologist</option>
+            <option value="pediatrician">Pediatrician</option>
+            <option value="surgeon">Surgeon</option>
+          </select>
+        </div>
+
+        {/* Submit Button */}
+        <div className="col-span-2 flex justify-end">
+          <button
+            type="button"
+            onClick={handleClick}
+            className="bg-blue-500 text-white px-6 py-2 rounded-md shadow-md hover:bg-blue-600 transition duration-300"
+          >
+            Add Doctor
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+};
+
+export default AddDoctorForm;

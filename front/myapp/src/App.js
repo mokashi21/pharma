@@ -7,6 +7,11 @@ import Dashboard from './components/Pages/Dashboard';
 import Admin from './components/Pages/Admin';
 import Edetailing from './components/Pages/Edetailing';
 import Cardio from './components/Detailing/Cardio';
+import Adddoctor from './components/Pages/Admin/Adddoctor';
+import Listdoctor from './components/Pages/Admin/Listdoctor';
+
+// Listdoctor
+
 
 
 
@@ -23,6 +28,10 @@ const App = () => {
         <Route  path="/admin-dashboard" element={<Admin />} />
         <Route  path="/e-detailing" element={<Edetailing />} />
         <Route  path="/e-detailing-cardio" element={<Cardio />} />
+        <Route  path="/admin-dashboard-add-doctors" element={ <Adddoctor /> } />
+
+        <Route  path="/admin-dashboard-all-doctors" element={<Listdoctor /> } />
+
 
       </Routes>
     </BrowserRouter>
