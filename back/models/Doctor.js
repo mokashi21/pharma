@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const doctorSchema = new mongoose.Schema({
   prefix: {
     type: String,
-    enum: ['Dr.'], // If you only allow 'Dr.'
+    enum: ['Dr.'],
     default: 'Dr.',
   },
   doctorName: {
@@ -20,12 +20,24 @@ const doctorSchema = new mongoose.Schema({
   },
   mobileNumber: {
     type: String,
-    required: true
+    required: true,
+    validate: {
+      validator: function(v) {
+        return /^\d{10}$/.test(v);
+      },
+      message: props => `${props.value} is not a valid mobile number!`
+    }
   },
   email: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    validate: {
+      validator: function(v) {
+        return /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(v); // Basic email validation
+      },
+      message: props => `${props.value} is not a valid email address!`
+    }
   },
   speciality: {
     type: String,
@@ -39,6 +51,18 @@ const doctorSchema = new mongoose.Schema({
   empId: {
     type: String,
     required: true
+  },
+  isReported: {
+    type: Boolean,
+    default: false,
+  },
+  reportedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'medical_rep', 
+  },
+  reportDate: {
+    type: Date,
+    default: null,
   }
 });
 

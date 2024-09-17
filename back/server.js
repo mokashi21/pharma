@@ -300,7 +300,6 @@ app.post("/admin-dashboard-add-doctors", verifyToken, async (req, res) => {
 });
 
 // list doctors;
-
 app.get("/all-doctors", verifyToken, async (req, res) => {
   try {
     const doctors = await Doctor.find();
@@ -309,7 +308,59 @@ app.get("/all-doctors", verifyToken, async (req, res) => {
     console.error('Error fetching doctors:', error);
     res.status(500).json({ message: 'Failed to fetch doctors' });
   }
+})
+// reports
+app.post('/report-doctors', verifyToken, async (req, res) => {
+  const { doctorIds } = req.body;
+  console.log("doctors", doctorIds);
+
+  // Validate input
+  if (!doctorIds || !Array.isArray(doctorIds) || doctorIds.length === 0) {
+    return res.status(400).json({ message: "Doctor IDs are required and should be an array" });
+  }
+
+  try {
+    // Find all doctors with the given IDs
+    const doctors = await Doctor.find({ _id: { $in: doctorIds } });
+
+    if (doctors.length === 0) {
+      return res.status(404).json({ message: "No doctors found with the provided IDs" });
+    }
+
+    // Ensure req.user.id exists
+    if (!req.user.id) { // Use id as per your token payload
+      return res.status(403).json({ message: "User not authenticated" });
+    }
+
+    // Update each doctor
+    for (const doctor of doctors) {
+      doctor.isReported = true;
+      doctor.reportedBy = req.user.id; // Correctly use req.user.id
+      doctor.reportDate = new Date();
+      await doctor.save();
+    }
+
+    res.status(200).json({ message: "Doctors reported successfully" });
+  } catch (error) {
+    console.error("Error reporting doctors:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// 
+app.get("/reported-doctors", verifyToken, async (req, res) => {
+  try {
+    const reportedDoctors = await Doctor.find({ isReported: true });
+    const missedDoctors = await Doctor.find({ isReported: false });
+    res.json({ reportedDoctors, missedDoctors });
+  } catch (error) {
+    console.error('Error fetching doctors:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 } )
+
+
+
 
 // Logout Route
 app.delete("/logout", verifyToken, (req, res) => {

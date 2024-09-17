@@ -10,6 +10,8 @@ import Cardio from './components/Detailing/Cardio';
 import Adddoctor from './components/Pages/Admin/Adddoctor';
 import Listdoctor from './components/Pages/Admin/Listdoctor';
 import Doctor from './components/Pages/Doctor';
+import Reports from './components/Pages/Reports';
+import Reported from './components/Pages/Reported';
 
 // Listdoctor
 
@@ -31,10 +33,9 @@ const App = () => {
         <Route  path="/e-detailing-cardio" element={<Cardio />} />
         <Route  path="/admin-dashboard-add-doctors" element={ <Adddoctor /> } />
         <Route  path="/admin-dashboard-all-doctors" element={<Listdoctor /> } />
+        <Route  path="/reports" element={<Reports /> } />
         <Route  path="/doctor" element={<Doctor/> } />
-
-
-
+        <Route  path="/reported-doctors" element={<Reported /> } />
       </Routes>
     </BrowserRouter>
   )
